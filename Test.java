@@ -4,7 +4,6 @@ import java.util.*;
 
 public class Test{
 
-    static int CONVERSION_FROM_NANO = 100000000;
     //Test keys (exponents)
     static ArrayList<BigInteger> keys = new ArrayList<BigInteger>();
 
@@ -24,21 +23,29 @@ public class Test{
     //Test samples (bases)
     static ArrayList <BigInteger> samples = new ArrayList <BigInteger>();
 
-    static byte [] testBasearr1= "blah blah blah blah blah".getBytes();
+    static byte [] testBasearr1= "blah ".getBytes();
     static BigInteger testBase1 = new BigInteger(testBasearr1);
 
-    static byte [] testBasearr2= "Hello my name is Anna".getBytes();
+    static byte [] testBasearr2= "Hello".getBytes();
     static BigInteger testBase2 = new BigInteger(testBasearr2);
 
-    static byte [] testBasearr3= "Today is friday and it is June".getBytes();
+    static byte [] testBasearr3= "Friday".getBytes();
     static BigInteger testBase3 = new BigInteger(testBasearr3);
 
-    static byte [] testBasearr4= "test base test base".getBytes();
+    static byte [] testBasearr4= "test ".getBytes();
     static BigInteger testBase4 = new BigInteger(testBasearr4);
+
+    static byte [] testBasearr5 = "test2".getBytes();
+    static BigInteger testBase5 = new BigInteger(testBasearr5);
+
 
     //Test mod
     static byte [] testModarr = "thisismod!".getBytes();
     static BigInteger testMod = new BigInteger(testModarr);
+
+
+    //to store all times across test. used to calculate overall variance
+    static ArrayList<Double> allTimes = new ArrayList<Double>();
 
     /**
     * Performs modular exponentiation with the indicated key for each of the samples.
@@ -52,6 +59,12 @@ public class Test{
       long totalTime;
       long [] times = new long [samples.size()];
 
+      //print out header
+      System.out.print("TEST FOR KEY ");
+      byte [] bytes = key.toByteArray();
+      System.out.print(Arrays.toString(bytes));
+      System.out.println("\n----------------------");
+
       //time the exponentiations
       for(int i = 0; i < samples.size(); i++){
         startTime = System.nanoTime();
@@ -59,6 +72,8 @@ public class Test{
         endTime = System.nanoTime();
         totalTime = (endTime - startTime);
         times[i] = totalTime;
+        allTimes.add((double)totalTime);
+        System.out.println("Time " + i + ": " + totalTime + "ns");
       }
       //calculate mean
       double sum = 0;
@@ -75,23 +90,32 @@ public class Test{
       double variance = (double)temp/(double)(samples.size() - 1);
 
       //print results
-      printTestResults(key, mean, variance);
+      System.out.println("Average time: " + mean + " ns");
+      System.out.println("Variance of times " + variance + " ns\n");
+
     }
 
-    /**
-    * Prints test results.
-    * @param key the key used as exponent during tests
-    * @param avg the average time taken to exponentiate the sample bases with key
-    * @param variance the variance of the times taken to exponentiante the sample bases with key
-    */
-    public static void printTestResults(BigInteger key, double avg, double variance){
-      System.out.print("TEST FOR KEY ");
-      byte [] bytes = key.toByteArray();
-      System.out.print(Arrays.toString(bytes));
-      System.out.println("\n----------------------");
-      System.out.println("Average time: " + avg + " ns");
-      System.out.println("Variance of times " + variance + " ns\n");
+    public static void overallAverageAndVariance(){
+      //calculate mean
+      double sum = 0;
+      for(int j = 0; j < allTimes.size(); j++){
+        sum += allTimes.get(j);
+      }
+      double mean = (double)sum/(double)allTimes.size();
+
+      //calculate variance
+      double temp = 0;
+      for(int k = 0; k < allTimes.size(); k++){
+          temp += (allTimes.get(k) - mean) * (allTimes.get(k) - mean);
+      }
+      double variance = (double)temp/(double)(allTimes.size() - 1);
+
+      //print average and variance
+      System.out.println("Average of all times: " + mean + "ns");
+      System.out.println("Variance of all times: " + variance + "ns\n");
+
     }
+
 
     public static void main(String [] args){
 
@@ -104,10 +128,15 @@ public class Test{
         samples.add(testBase2);
         samples.add(testBase3);
         samples.add(testBase4);
+        samples.add(testBase5);
+
 
         //run tests
         for(BigInteger key: keys){
           performTest(key);
         }
+
+        //calculate variance of test timing averages
+        overallAverageAndVariance();
     }
 }
