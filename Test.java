@@ -25,8 +25,8 @@ public class Test{
     //Test samples (bases)
     static ArrayList <BigInteger> samples = new ArrayList <BigInteger>();
 
-    //Test mod. Same for each test 
-    static byte [] testModarr = "thisismod!".getBytes();
+    //Test mod. Same for each test
+    static byte [] testModarr = "thisismod!this is same for each ".getBytes();
     static BigInteger testMod = new BigInteger(testModarr);
 
     //to store all times across test. used to calculate overall variance
