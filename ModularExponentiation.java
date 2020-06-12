@@ -30,10 +30,10 @@ public class ModularExponentiation{
 
 
   public static void main(String [] args){
-  //  BigInteger base = new BigInteger("5");
-  //  BigInteger exp = new BigInteger("6");
-  //  BigInteger mod = new BigInteger("7");
-    //System.out.println("Result of " + base + "^" + exp + "(mod" + mod + ") is " + regularModExp(base, exp, mod));
+    BigInteger base = new BigInteger("3");
+    BigInteger exp = new BigInteger("4");
+    BigInteger mod = new BigInteger("5");
+    System.out.println("Result of " + base + "^" + exp + "(mod" + mod + ") is " + regularModExp(base, exp, mod));
 
 
   }
