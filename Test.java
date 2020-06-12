@@ -38,7 +38,7 @@ public class Test{
     * Prints results based on mode.
     * @param key exponent for the modular exponentiation
     */
-    public static void performTest(BigInteger key, String mode){
+    public static void performTest(BigInteger key, String mode, String exp_type){
       long startTime;
       long endTime;
       long totalTime;
@@ -54,7 +54,12 @@ public class Test{
       //time the exponentiations
       for(int i = 0; i < samples.size(); i++){
         startTime = System.nanoTime();
-        ModularExponentiation.regularModExp(samples.get(i), key, testMod);
+        if(exp_type.equals("normal")){
+          ModularExponentiation.regularModExp(samples.get(i), key, testMod);
+        }
+        else if(exp_type.equals("improved")){
+          ImprovedModularExponentiation.modexp(samples.get(i), key, testMod);
+        }
         endTime = System.nanoTime();
         totalTime = (endTime - startTime);
         times[i] = totalTime;
@@ -116,20 +121,28 @@ public class Test{
     public static void main(String [] args){
         //validate mode the user entered
         //all = full test, avg = just averages for each hamming weight, var = just variances for each hamming weight
-        if(args.length != 1){
-          System.out.println("Please enter an argument.\n" +
-           "\"all\" for full test, \"avg\" for just averages, \"var\" for just variances");
+        if(args.length != 2){
+          System.out.println("Please enter 2 arguments.\n" +
+           "MODE: \"all\" for full test, \"avg\" for just averages, \"var\" for just variances");
+           System.out.println("EXPONENTIATION TYPE: \"normal\" or \"improved\"");
            System.exit(0);
         }
         else if(!args[0].equals("all") && !args[0].equals("avg") && !args[0].equals("var")){
-          System.out.println("Please enter an argument.\n" +
-           "\"all\" for full test, \"avg\" for just averages, \"var\" for just variances");
+          System.out.println("Please enter 2 arguments.\n" +
+           "MODE: \"all\" for full test, \"avg\" for just averages, \"var\" for just variances");
+           System.out.println("EXPONENTIATION TYPE: \"normal\" or \"improved\"");
+           System.exit(0);
+        }
+        else if(!args[1].equals("normal") && !args[1].equals("improved")){
+          System.out.println("Please enter 2 arguments.\n" +
+           "MODE: \"all\" for full test, \"avg\" for just averages, \"var\" for just variances");
+           System.out.println("EXPONENTIATION TYPE: \"normal\" or \"improved\"");
            System.exit(0);
         }
 
-        //set the mode so it can be accessed from all methods
+        //set the mode  and exponentiation typeso it can be accessed from all methods
         String mode = args[0];
-
+        String exp_type = args[1];
         //add keys of hamming weights 1 to KEY_SIZE to arraylist of keys to use
         BigInteger temp = new BigInteger("2").pow(KEY_SIZE); //100000.....
         for(int i = 0; i < KEY_SIZE; i++){
@@ -145,7 +158,7 @@ public class Test{
 
         //run tests
         for(BigInteger key: keys){
-          performTest(key, mode);
+          performTest(key, mode, exp_type);
         }
 
         //calculate variance of test timing averages if in full test mode
