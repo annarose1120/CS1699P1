@@ -12,6 +12,11 @@ import java.util.*;
 //For each test, the average and variance of these times is calculated.
 //After all of the tests are performed (one for each key), the overall variance and average of
 //all times is calculated.
+//
+//To compile: javac *.java
+//To run:     java Test mode exponentiation-type
+//            mode: all, avg, var
+//            exponentiation-type: normal , improved
 //-----------------------------------------------------------------------------------------------------------------
 
 public class Test{
